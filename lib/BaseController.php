@@ -3,7 +3,6 @@ session_start();
 define('NUMBER_RECORD',5);
 class BaseController{
     public function view($name,$data=array()){
-//        var_dump($data);
         extract($data);
         return require_once ('View/'.$name.'.php');
     }
@@ -22,7 +21,20 @@ class BaseController{
             $offset = $pagination->getOffset();
             $dt1 = $md->searchLimit($column_search,$search,$offset,NUMBER_RECORD);
             $this->view('list-' . $select, ['list_' . $select => $dt1,'link' => $link]);
-        } else {
+        } else if(isset($_GET['sort'])){
+            $sort = $_GET['sort'];
+            $order = $_GET['order'];
+            $md = new $model($table);
+            $dt = $md->getAll('*');
+            $page = $_GET['page'];
+            $totalRecord = $dt->num_rows;
+            $pagination = new Pagination($totalRecord,NUMBER_RECORD,$page);
+            $link = $pagination->paginationPanel($href);
+            $offset = $pagination->getOffset();
+            $dt1 = $md->sortBy($sort,$order, $offset, NUMBER_RECORD);
+            $this->view('list-'.$select, ['list_'.$select => $dt1,'link' => $link]);
+        }
+        else {
             $md = new $model($table);
             $dt = $md->getAll('*');
             $page = $_GET['page'];
@@ -107,19 +119,5 @@ class BaseController{
                 $md->update($id, $post);
             }
         }
-    }
-
-    public function sort($table,$model,$select,$sort,$href)
-    {
-        $order = $_GET['order'];
-        $md = new $model($table);
-        $dt = $md->getAll('*');
-        $page = $_GET['page'];
-        $totalRecord = $dt->num_rows;
-        $pagination = new Pagination($totalRecord,NUMBER_RECORD,$page);
-        $link = $pagination->paginationPanel($href);
-        $offset = $pagination->getOffset();
-        $dt1 = $md->sortBy($sort,$order, $offset, NUMBER_RECORD);
-        $this->view('list-'.$select, ['list_'.$select => $dt1,'link' => $link]);
     }
 }
