@@ -4,12 +4,7 @@ class CategoryController extends BaseController
 {
     public function index()
     {
-        if(isset($_GET['search'])) {
-            $this->indexBase('categories', 'CategoryModel', 'categoryname', 'categories', 'index.php?controller=CategoryController&action=index&search=' . $_GET['search'] . '&page=');
-        }
-        else {
-            $this->indexBase('categories', 'CategoryModel', 'categoryname', 'categories', 'index.php?controller=CategoryController&action=index&page=');
-        }
+        $this->indexBase('categories', 'CategoryModel', 'categoryname', 'categories', 'index.php?controller=CategoryController&action=index&page=');
     }
 
     public function viewAddCategory()
@@ -58,45 +53,5 @@ class CategoryController extends BaseController
 
         $this->edit('categories','CategoryModel',['categoryname'=>$categoryname,'activate'=>$activate,'time_updated'=>$time_updated]);
         header('Location:index.php?controller=CategoryController&action=index&page=1');
-    }
-
-    public function sortId()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('categories','CategoryModel','categories','id','index.php?controller=CategoryController&action=sortId&order=asc&page=');
-        else
-            $this->sort('categories','CategoryModel','categories','id','index.php?controller=CategoryController&action=sortId&order=desc&page=');
-    }
-
-    public function sortCategoryname()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('categories','CategoryModel','categories','categoryname','index.php?controller=CategoryController&action=sortCategoryname&order=asc&page=');
-        else
-            $this->sort('categories','CategoryModel','categories','Categoryname','index.php?controller=CategoryController&action=sortCategoryname&order=desc&page=');
-    }
-
-    public function sortActivate()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('categories','CategoryModel','categories','activate','index.php?controller=CategoryController&action=sortActivate&order=asc&page=');
-        else
-            $this->sort('categories','CategoryModel','categories','activate','index.php?controller=CategoryController&action=sortActivate&order=desc&page=');
-    }
-
-    public function sortTimeCreated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('categories','CategoryModel','categories','time_created','index.php?controller=CategoryController&action=sortTimeCreated&order=asc&page=');
-        else
-            $this->sort('categories','CategoryModel','categories','time_created','index.php?controller=CategoryController&action=sortTimeCreated&order=desc&page=');
-    }
-
-    public function sortTimeUpdated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('categories','CategoryModel','categories','time_updated','index.php?controller=CategoryController&action=sortTimeUpdated&order=asc&page=');
-        else
-            $this->sort('categories','CategoryModel','categories','time_updated','index.php?controller=CategoryController&action=sortTimeUpdated&order=desc&page=');
     }
 }
