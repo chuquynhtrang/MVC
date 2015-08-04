@@ -50,19 +50,19 @@ include 'menu.php';
                         <tr>
                             <th><input type="checkbox" id="checkAll"/></th>
                             <th width="15%" class="<?php if($_GET['action']=='sortId'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                <a href="index.php?controller=UserController&action=sortId&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>" id="sortId">ID</a>
+                                <a href="index.php?controller=UserController&action=index&sort=id&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>" id="sortId">ID</a>
                             </th>
                             <th width="35%" class="<?php if($_GET['action']=='sortUsername'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                <a href="index.php?controller=UserController&action=sortUsername&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Username</a>
+                                <a href="index.php?controller=UserController&action=index&sort=username&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Username</a>
                             </th>
                             <th width="20%" class="<?php if($_GET['action']=='sortActivate'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                <a href="index.php?controller=UserController&action=sortActivate&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Activate</a>
+                                <a href="index.php?controller=UserController&action=index&sort=activate&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Activate</a>
                             </th>
                             <th width="10%" class="<?php if($_GET['action']=='sortTimeCreated'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                <a href="index.php?controller=UserController&action=sortTimeCreated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Created</a>
+                                <a href="index.php?controller=UserController&action=index&sort=time_created&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Created</a>
                             </th>
                             <th width="10%" class="<?php if($_GET['action']=='sortTimeUpdated'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                <a href="index.php?controller=UserController&action=sortTimeUpdated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Updated</a>
+                                <a href="index.php?controller=UserController&action=index&sort=time_updated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Updated</a>
                             </th>
                             <th width="10%">Action</th>
                         </tr>
