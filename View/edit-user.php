@@ -28,25 +28,41 @@ include "menu.php";
                 </div>
                 <div class="block-fluid">
                     <form method="POST" action="index.php?controller=UserController&action=editUser&id=<?php echo $_GET['id'];?> " enctype="multipart/form-data">
-                    	<div class="row-form">
+                        <input type="hidden" name="page" value="<?php echo $_GET['page'];?>">
+                        <div class="row-form">
                             <div class="span3">Username:</div>
-                            <div class="span9"><input type="text" name = "username" value="<?php echo $data['username']; ?>"/></div>
+                            <div class="span9"><input type="text" name = "username" value="<?php if(isset($data['username'])) echo $data['username']; ?>"/>
+                                <?php
+                                if(isset($error['username']))
+                                    echo $error['username'];
+                                ?>
+                            </div>
                             <div class="clear"></div>
                         </div> 
                     	<div class="row-form">
                             <div class="span3">Email:</div>
-                            <div class="span9"><input type="text" name = "email" value="<?php echo $data['email']; ?>"/></div>
+                            <div class="span9"><input type="text" name = "email" value="<?php if(isset($data['email'])) echo $data['email']; ?>"/>
+                                <?php
+                                if(isset($error['email']))
+                                    echo $error['email'];
+                                ?>
+                            </div>
                             <div class="clear"></div>
                         </div> 
                     	<div class="row-form">
                             <div class="span3">Password:</div>
-                            <div class="span9"><input type="text" name = "password" value="<?php echo $data['password']; ?>"/></div>
+                            <div class="span9"><input type="text" name = "password" value="<?php if(isset($data['password'])) echo $data['password']; ?>"/>
+                                <?php
+                                if(isset($error['password']))
+                                    echo $error['password'];
+                                ?>
+                            </div>
                             <div class="clear"></div>
                         </div> 
                     	<div class="row-form">
                             <div class="span3">Upload Avatar:</div>
                             <div class="span9">
-                            <img src="upload/<?php echo $data['username']; ?>.jpg" /><br/>
+                            <img src="upload/<?php echo $data['username']; ?>.jpg" width="70px"/><br/>
                             <input type="file" name="avatar" size="19">
                             </div>
                             <div class="clear"></div>

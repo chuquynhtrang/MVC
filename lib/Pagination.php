@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Trang
- * Date: 8/3/2015
- * Time: 9:45 AM
- */
 class Pagination
 {
     private $totalRecord;
@@ -18,7 +12,7 @@ class Pagination
         $this->totalRecord = $totalRecord;
         $this->currentPage = $currentPage;
         $this->recordPerPage = $recordPerPage;
-        $this->totalPage = ceil($totalRecord/$recordPerPage);
+        $this->totalPage = ceil($totalRecord / $recordPerPage);
     }
 
     public function getOffset()
@@ -27,7 +21,6 @@ class Pagination
         return $offset;
     }
 
-    //href = 'index?controller=UserController&action=index&page='
     public function paginationPanel($href)
     {
         $nextHTML = '';
@@ -35,59 +28,70 @@ class Pagination
         $firstHTML = '';
         $preHTML = '';
         $nextNumHTML = '';
+        $nextNum2HTML = '';
         $preNumHTML = '';
+        $preNum2HTML = '';
         $next = $this->currentPage + 1;
         $pre = $this->currentPage - 1;
-
-
-        if($this->currentPage == 1){
-            $firstHTML = "<a class='first paginate_button paginate_button_disabled' href='#'>First</a>";
-            $preHTML = "<a class='previous paginate_button paginate_button_disabled' href='#'>Previous</a>";
-            $nextHTML = "<a class='next paginate_button' href='{$href}{$next}'>Next</a>";
-            $lastHTML = "<a class='last paginate_button' href='{$href}{$this->totalPage}'>Last</a>";
-            $nextNumHTML = "<a class='paginate_button' href='{$href}{$next}'>{$next}</a>";
-            $preNumHTML = '';
-        }
-
-        if($this->currentPage == $this->totalPage){
-            $firstHTML = "<a class='first paginate_button' href='{$href}1'>First</a>";
-            $preHTML = "<a class='previous paginate_button' href='{$href}{$pre}'>Previous</a>";
-            $nextHTML = "<a class='next paginate_button paginate_button_disabled' href='#'>Next</a>";
-            $lastHTML = "<a class='last paginate_button paginate_button_disabled' href='#'>Last</a>";
-            $preNumHTML = "<a class='paginate_button' href='{$href}{$pre}'>{$pre}</a>";
-            $nextNumHTML = '';
-        }
-
-        if($this->currentPage > 1 && $this->currentPage < $this->totalPage){
-            $firstHTML = "<a class='first paginate_button' href='{$href}1'>First</a>";
-            $preHTML = "<a class='previous paginate_button' href='{$href}{$pre}'>Previous</a>";
-            $nextHTML = "<a class='next paginate_button' href='{$href}{$next}'>Next</a>";
-            $lastHTML = "<a class='last paginate_button' href='{$href}{$this->totalPage}'>Last</a>";
-            $nextNumHTML = "<a class='paginate_button' href='{$href}{$next}'>{$next}</a>";
-            $preNumHTML = "<a class='paginate_button' href='{$href}{$pre}'>{$pre}</a>";
-        }
-
-        if($this->totalPage == 1){
-            $firstHTML = "<a class='first paginate_button paginate_button_disabled' href='{$href}1'>First</a>";
-            $preHTML = "<a class='previous paginate_button paginate_button_disabled' href='#'>Previous</a>";
-            $nextHTML = "<a class='next paginate_button paginate_button_disabled' href='#'>Next</a>";
-            $lastHTML = "<a class='last paginate_button paginate_button_disabled' href='{$href}1'>Last</a>";
-            $nextNumHTML = "";
-            $preNumHTML = '';
-        }
+        $pre_1 = $this->currentPage - 2;
+        $next_1 = $this->currentPage + 2;
+        $class_disabled = 'paginate_button paginate_button_disabled';
+        $class_abled = 'paginate_button paginate_button';
         $current = "<a class='paginate_active' href='{$href}{$this->currentPage}'>{$this->currentPage}</a>";
+        if($this->totalPage <= 3){
+            $firstHTML = "<a class='$class_disabled' href=''>First</a>";
+            $preHTML = "<a class='$class_disabled' href=''>Previous</a>";
+            $nextHTML = "<a class='$class_disabled' href=''>Next</a>";
+            $lastHTML = "<a class='$class_disabled' href=''>Last</a>";
+            if($this->totalPage == 0)
+                $current = '';
+            if($this->totalPage == 2) {
+                if ($this->currentPage == 1)
+                    $nextNumHTML = "<a class='$class_abled' href='{$href}{$next}'>$next</a>";
+                else
+                    $preNumHTML = "<a class='$class_abled' href='{$href}{$pre}'>$pre</a>";
+            }
+            if($this->totalPage == 3){
+                if($this->currentPage==1) {
+                    $nextNumHTML = "<a class='$class_abled' href='{$href}{$next}'>$next</a>";
+                    $nextNum2HTML = "<a class ='$class_abled' href='{$href}{$next_1}'>$next_1</a>";
+                }
+                else if($this->currentPage==2) {
+                    $preNumHTML = "<a class='$class_abled' href='{$href}{$pre}'>$pre</a>";
+                    $nextNumHTML = "<a class ='$class_abled' href='{$href}{$next}'>$next</a>";
+                }else {
+                    $preNum2HTML = "<a class='$class_abled' href='{$href}{$pre_1}'>$pre_1</a>";
+                    $preNumHTML = "<a class='$class_abled' href='{$href}{$pre}'>$pre</a>";
+                }
+            }
 
-        if($this->totalPage == 0){
-            $firstHTML = "<a class='first paginate_button paginate_button_disabled' href='#'>First</a>";
-            $preHTML = "<a class='previous paginate_button paginate_button_disabled' href='#'>Previous</a>";
-            $nextHTML = "<a class='next paginate_button paginate_button_disabled' href='#'>Next</a>";
-            $lastHTML = "<a class='last paginate_button paginate_button_disabled' href='#'>Last</a>";
-            $nextNumHTML = "";
-            $preNumHTML = '';
+        } else {
+            if($this->currentPage < $this->totalPage){
+                if($this->currentPage == 1){
+                    $firstHTML = "<a class='$class_disabled' href='{$href}1'>First</a>";
+                    $preHTML = "<a class='$class_disabled' href='{$href}{$pre}'>Previous</a>";
+                    $nextNumHTML = "<a class='$class_abled' href='{$href}{$next}'>$next</a>";
+                    $nextNum2HTML = "<a class='$class_abled' href='{$href}{$next_1}'>$next_1</a>";
+                    $nextHTML = "<a class='$class_abled' href='{$href}{$next}'>Next</a>";
+                    $lastHTML = "<a class='$class_abled' href='{$href}{$this->totalPage}'>Last</a>";
+                } else {
+                    $firstHTML = "<a class='$class_abled' href='{$href}1'>First</a>";
+                    $preHTML = "<a class='$class_abled' href='{$href}{$pre}'>Previous</a>";
+                    $preNumHTML = "<a class='$class_abled' href='{$href}{$pre}'>$pre</a>";
+                    $nextNumHTML = "<a class='$class_abled' href='{$href}{$next}'>$next</a>";
+                    $nextHTML = "<a class='$class_abled' href='{$href}{$next}'>Next</a>";
+                    $lastHTML = "<a class='$class_abled' href='{$href}{$this->totalPage}'>Last</a>";
+                }
+            } else {
+                $firstHTML = "<a class='$class_abled' href='{$href}1'>First</a>";
+                $preHTML = "<a class='$class_abled' href='{$href}{$pre}'>Previous</a>";
+                $preNum2HTML = "<a class='$class_abled' href='{$href}{$pre_1}'>$pre_1</a>";
+                $preNumHTML = "<a class='$class_abled' href='{$href}{$pre}'>$pre</a>";
+                $nextHTML = "<a class='$class_disabled' href='{$href}{$next}'>Next</a>";
+                $lastHTML = "<a class='$class_disabled' href='{$href}{$this->totalPage}'>Last</a>";
+            }
         }
-
-
-        $html = $firstHTML . $preHTML . $preNumHTML. $current . $nextNumHTML . $nextHTML . $lastHTML;
+        $html = $firstHTML . $preHTML . $preNum2HTML.$preNumHTML. $current . $nextNumHTML . $nextNum2HTML. $nextHTML . $lastHTML;
         return $html;
     }
 }

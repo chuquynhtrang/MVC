@@ -32,10 +32,10 @@
 
     <div class="admin">
         <div class="image">
-            <img src="upload/<?php echo $_SESSION['username']; ?>.jpg" class="img-polaroid"/>
+            <img src="upload/<?php echo $_SESSION['username']; ?>.jpg" width="50px" class="img-polaroid"/>
         </div>
         <ul class="control">
-            <li><span class="icon-cog"></span> <a href="index.php?controller=UserController&action=viewEditUser&id=<?php echo $_SESSION['id'];?>">Update Profile</a></li>
+            <li><span class="icon-cog"></span> <a href="index.php?controller=UserController&action=editUser&id=<?php echo $_SESSION['id'];?>">Update Profile</a></li>
             <li><span class="icon-share-alt"></span> <a href="index.php?controller=LogoutController&action=logout">Logout</a></li>
         </ul>
     </div>

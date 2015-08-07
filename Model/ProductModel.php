@@ -13,4 +13,16 @@ class ProductModel extends Model {
     {
         parent::__construct($table);
     }
+
+    public function filter($category_id)
+    {
+        $query = "SELECT * FROM products WHERE category_id = $category_id";
+        $result = $this->cont->query($query);
+        return $result;
+    }
+    public function getCount($category_id){
+        $query = "SELECT COUNT(productname) FROM products WHERE category_id = $category_id";
+        $result = $this->cont->query($query);
+        return $result;
+    }
 }

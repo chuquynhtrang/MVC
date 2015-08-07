@@ -2,12 +2,18 @@
 require_once 'Model/UserModel.php';
 class UserController extends BaseController
 {
+    private $rule = array('username' => array('required','username'),
+        'password' => array('required','min','max','password'),
+        'email' => array('email'));
+
     public function index()
     {
         if(isset($_GET['search']))
-            $this->indexBase('users','UserModel','username','users','index.php?controller=UserController&action=index&search='.$_GET['search'].'&page=');
+            $this->indexBase('users','UserModel','username','users',HREFUSER.'&search='.$_GET['search'].'&page=');
+        else if(isset($_GET['sort']))
+            $this->indexBase('users','UserModel','username','users',HREFUSER.'&sort='.$_GET['sort'].'&order='.$_GET['order'].'&page=');
         else
-            $this->indexBase('users','UserModel','username','users','index.php?controller=UserController&action=index&page=');
+            $this->indexBase('users','UserModel','username','users',HREFUSER.'&page=');
     }
 
     public function viewAddUser()
@@ -17,78 +23,46 @@ class UserController extends BaseController
     //controller add user
     public function addUser()
     {
-        var_dump($_POST);
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $activate = $_POST['activate'];
-        $image = $_POST['username'];
-        $this->add('users','UserModel',['username'=>$username,'email'=>$email,'password'=>$password,'activate'=>$activate,'image'=>$image]);
-        header('Location: index.php?controller=UserController&action=index&page=1');
-    }
-
-    public function handle()
-    {
-        $this->handleBase('users','UserModel');
-        header('Location:index.php?controller=UserController&action=index&page=1');
-    }
-
-    public function viewEditUser()
-    {
-        $this->viewEdit('users','UserModel','user');
+        $validate = new Validate($this->rule);
+        $error = $validate->execute($_POST);
+        if(!$error) {
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            $activate = $_POST['activate'];
+            $image = $_POST['username'];
+            $this->add('users', 'UserModel', ['username' => $username, 'email' => $email, 'password' => $password, 'activate' => $activate, 'image' => $image]);
+            $md = new UserModel('users');
+            $dt = $md->getAll('*');
+            $totalRecord = $dt->num_rows;
+            $totalPage = ceil($totalRecord/NUMBER_RECORD);
+        header('Location:'. HREFUSER.'&page='.$totalPage);
+        } else {
+            $this->view('add-user',['error'=>$error]);
+        }
     }
 
     public function editUser()
     {
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $activate = $_POST['activate'];
-        date_default_timezone_set('Asia/BangKok');
-        $time_updated = date('y-m-d H:i:s');
-        $image = $_POST['username'];
-
-        $this->edit('users','UserModel',['username'=>$username,'email'=>$email,'password'=>$password,'activate'=>$activate,'time_updated'=>$time_updated,'image'=>$image]);
-        header('Location:index.php?controller=UserController&action=index&page=1');
+        $data=$this->getOldEdit('users','UserModel');
+        if($_SERVER['REQUEST_METHOD'] == "POST") {
+            $validate = new Validate($this->rule);
+            $error = $validate->execute($_REQUEST);
+            if (!$error) {
+                $dt['username'] = $_POST['username'];
+                $dt['email'] = $_POST['email'];
+                $dt['password'] = $_POST['password'];
+                $dt['activate'] = $_POST['activate'];
+                date_default_timezone_set('Asia/BangKok');
+                $dt['time_updated'] = date('y-m-d H:i:s');
+                $dt['image'] = $_POST['username'];
+                $this->edit('users', 'UserModel', $dt);
+                header('Location:' . HREFUSER . '&page='.$_SESSION['page']);
+            } else {
+                $this->view('edit-user', ['data' => $data, 'error' => $error]);
+            }
+        } else
+            $this->view('edit-user', ['data' => $data]);
     }
 
-    public function sortId()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('users','UserModel','users','id','index.php?controller=UserController&action=sortId&order=asc&page=');
-        else
-            $this->sort('users','UserModel','users','id','index.php?controller=UserController&action=sortId&order=desc&page=');
-    }
-
-    public function sortUsername()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('users','UserModel','users','username','index.php?controller=UserController&action=sortUsername&order=asc&page=');
-        else
-            $this->sort('users','UserModel','users','username','index.php?controller=UserController&action=sortUsername&order=desc&page=');
-    }
-
-    public function sortActivate()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('users','UserModel','users','activate','index.php?controller=UserController&action=sortActivate&order=asc&page=');
-        else
-            $this->sort('users','UserModel','users','activate','index.php?controller=UserController&action=sortActivate&order=desc&page=');
-    }
-
-    public function sortTimeCreated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('users','UserModel','users','time_created','index.php?controller=UserController&action=sortTimeCreated&order=asc&page=');
-        else
-            $this->sort('users','UserModel','users','time_created','index.php?controller=UserController&action=sortTimeCreated&order=desc&page=');
-    }
-
-    public function sortTimeUpdated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('users','UserModel','users','time_updated','index.php?controller=UserController&action=sortTimeUpdated&order=asc&page=');
-        else
-            $this->sort('users','UserModel','users','time_updated','index.php?controller=UserController&action=sortTimeUpdated&order=desc&page=');
-    }
 }

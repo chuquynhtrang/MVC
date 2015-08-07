@@ -7,7 +7,7 @@ include_once 'menu.php';
     <div class="breadLine">
 
         <ul class="breadcrumb">
-            <li><a href="index.php?controller=UserController&action=index&page=1">List Categories</a> <span class="divider">></span></li>
+            <li><a href="index.php?controller=CategoryController&action=index&page=1">List Categories</a> <span class="divider">></span></li>
             <li class="active">Edit</li>
         </ul>
 

@@ -25,7 +25,7 @@ include_once 'menu.php';
                     <div class="clear"></div>
                 </div>
                 <div class="block-fluid">
-                    <form method="POST" action="index.php?controller=ProductController&action=editProduct&id=<?php echo $_GET['id'];?> " enctype="multipart/form-data">>
+                    <form method="POST" action="index.php?controller=ProductController&action=editProduct&id=<?php echo $_GET['id'];?> " enctype="multipart/form-data">
                     	<div class="row-form">
                             <div class="span3">Product Name:</div>
                             <div class="span9"><input type="text" name = "productname" value="<?php echo $data['productname']; ?>"/></div>
@@ -59,7 +59,19 @@ include_once 'menu.php';
                                 </select>
                             </div>
                             <div class="clear"></div>
-                        </div>                          
+                        </div>
+                        <div class="row-form">
+                            <div class="span3">Category:</div>
+                            <div class="span9">
+                                <select name="category">
+                                    <?php foreach($list as $key){?>
+                                        <option value="<?php echo $key['id'];?>" <?php if($data['category_id'] ==$key['id']) echo "selected"?>>
+                                        <?php echo $key['categoryname'];?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
                         <div class="row-form">
                         	<button class="btn btn-success" type="submit" name="update">Update</button>
 							<div class="clear"></div>
@@ -75,6 +87,5 @@ include_once 'menu.php';
     </div>
 
 </div>
-
 </body>
 </html>

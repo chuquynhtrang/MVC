@@ -1,94 +1,92 @@
 <?php
 require_once 'Model/ProductModel.php';
+require_once 'Model/CategoryModel.php';
 class ProductController extends BaseController
 {
     public function index()
     {
-        if(isset($_GET['search']))
-            $this->indexBase('products','ProductModel','productname','products','index.php?controller=ProductController&action=index&search='.$_GET['search'].'&page=');
-        else
-            $this->indexBase('products','ProductModel','productname','products','index.php?controller=ProductController&action=index&page=');
+        if(isset($_GET['category_id'])){
+            $category_id = $_GET['category_id'];
+            $model = new ProductModel('products');
+            $result = $model->filter($category_id);
+            $list = array();
+            while($row = $result->fetch_assoc()){
+                $list[] = $row;
+            }
+            $this->view('groupby-categories',['list'=>$list]);
+        }
+        else if(isset($_GET['search']))
+            $this->indexBase('products','ProductModel','productname','products',HREFPRODUCT.'&search='.$_GET['search'].'&page=');
+        else if(isset($_GET['sort']))
+            $this->indexBase('products','ProductModel','productname','products',HREFPRODUCT.'&sort='.$_GET['sort'].'&order='.$_GET['order'].'&page=');
+        else {
+            $md = new ProductModel('products');
+            $dt = $md->getAll('*');
+            $page = $_GET['page'];
+            $totalRecord = $dt->num_rows;
+            $pagination = new Pagination($totalRecord,NUMBER_RECORD,$page);
+            $link = $pagination->paginationPanel(HREFPRODUCT.'&page=');
+            $offset = $pagination->getOffset();
+            $model = new CategoryModel('categories');
+            $data = $model->getAll('id,categoryname');
+            $list = array();
+            while($row = $data->fetch_assoc()){
+                $list[] = $row;
+            }
+            $dt2 = $md->getAllLimit($offset,NUMBER_RECORD);
+            $this->view('list-products',['list_products' => $dt2,'link'=>$link,'list'=>$list]);
+        }
+//        $this->indexBase('products','ProductModel','productname','products',HREFPRODUCT.'&page=');
     }
 
     public function viewAddProduct()
     {
-        $this->viewAdd('product');
+        $model = new CategoryModel('categories');
+        $data = $model->getAll('*');
+        $list  = array();
+        while($row=$data->fetch_assoc()){
+            $list[] = $row;
+        }
+        $this->viewAdd('product',['list' => $list]);
     }
     //controller add user
     public function addProduct()
     {
-        var_dump($_POST);
-        $productname = $_POST['productname'];
-        $price = $_POST['price'];
-        $description = $_POST['description'];
-        $activate = $_POST['activate'];
-        $image = $_POST['productname'];
-        $this->add('products','ProductModel',['productname'=>$productname,'price'=>$price,'description'=>$description,'activate'=>$activate,'image'=>$image]);
-        header('Location: index.php?controller=ProductController&action=index&page=1');
-    }
-
-    public function handle()
-    {
-        $this->handleBase('products','ProductModel');
-        header('Location:index.php?controller=ProductController&action=index&page=1');
-    }
-
-    public function viewEditProduct()
-    {
-        $this->viewEdit('products','ProductModel','product');
+        $dt['productname'] = $_POST['productname'];
+        $dt['price'] = $_POST['price'];
+        $dt['description'] = $_POST['description'];
+        $dt['activate'] = $_POST['activate'];
+        $dt['image'] = $_POST['productname'];
+        $dt['category_id'] = $_POST['category'];
+        $this->add('products','ProductModel',$dt);
+        $md = new ProductModel('products');
+        $dt = $md->getAll('*');
+        $totalRecord = $dt->num_rows;
+        $totalPage = ceil($totalRecord/NUMBER_RECORD);
+        header('Location:'. HREFPRODUCT.'&page='.$totalPage);
     }
 
     public function editProduct()
     {
-        $productname = $_POST['productname'];
-        $price = $_POST['price'];
-        $description = $_POST['description'];
-        $activate = $_POST['activate'];
-        date_default_timezone_set('Asia/BangKok');
-        $time_updated = date('y-m-d H:i:s');
-        $image = $_POST['productname'];
-
-        $this->edit('products','ProductModel',['productname'=>$productname,'price'=>$price,'description'=>$description,'activate'=>$activate,'time_updated'=>$time_updated,'image'=>$image]);
-        header('Location:index.php?controller=ProductController&action=index&page=1');
-    }
-
-    public function sortId()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('products','ProductModel','products','id','index.php?controller=ProductController&action=sortId&order=asc&page=');
-        else
-            $this->sort('products','ProductModel','products','id','index.php?controller=ProductController&action=sortId&order=desc&page=');
-    }
-
-    public function sortProductname()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('products','ProductModel','products','productname','index.php?controller=ProductController&action=sortProductname&order=asc&page=');
-        else
-            $this->sort('products','ProductModel','products','productname','index.php?controller=ProductController&action=sortProductname&order=desc&page=');
-    }
-
-    public function sortActivate()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('products','ProductModel','products','activate','index.php?controller=ProductController&action=sortActivate&order=asc&page=');
-        else
-            $this->sort('products','ProductModel','products','activate','index.php?controller=ProductController&action=sortActivate&order=desc&page=');
-    }
-
-    public function sortTimeCreated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('products','ProductModel','products','time_created','index.php?controller=ProductController&action=sortTimeCreated&order=asc&page=');
-        else
-            $this->sort('products','ProductModel','products','time_created','index.php?controller=ProductController&action=sortTimeCreated&order=desc&page=');
-    }
-
-    public function sortTimeUpdated()
-    {
-        if($_GET['order']=='asc')
-            $this->sort('products','ProductModel','products','time_updated','index.php?controller=ProductController&action=sortTimeUpdated&order=asc&page=');
-        else
-            $this->sort('products','ProductModel','products','time_updated','index.php?controller=ProductController&action=sortTimeUpdated&order=desc&page=');
+        $data = $this->getOldEdit('products','ProductModel');
+        $md = new CategoryModel('categories');
+        $result = $md->getAll('id,categoryname');
+        $list  = array();
+        while($row=$result->fetch_assoc()) {
+            $list[] = $row;
+        }
+        if($_SERVER['REQUEST_METHOD'] == "POST") {
+            $dt['productname'] = $_POST['productname'];
+            $dt['price'] = $_POST['price'];
+            $dt['description'] = $_POST['description'];
+            $dt['activate'] = $_POST['activate'];
+            date_default_timezone_set('Asia/BangKok');
+            $dt['time_updated'] = date('y-m-d H:i:s');
+            $dt['image'] = $_POST['productname'];
+            $dt['category_id'] = $_POST['category'];
+            $this->edit('products', 'ProductModel', $dt);
+            header('Location:' . HREFPRODUCT . '&page='.$_SESSION['page']);
+        }
+        $this->view('edit-product',['data'=>$data,'list'=>$list]);
     }
 }

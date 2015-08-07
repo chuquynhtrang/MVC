@@ -43,32 +43,61 @@ include_once 'menu.php';
                     <a href="index.php?controller=CategoryController&action=viewAddCategory" class="btn btn-add">Add Category</a>
                     <table cellpadding="0" cellspacing="0" width="100%" class="table" id="tSortable_2">
                         <thead>
-                        <form method="POST" action="index.php?controller=CategoryController&action=handle">
+                        <form method="POST" action="index.php?controller=CategoryController&action=index&page=<?php echo $_GET['page'];?>">
                             <?php
                             if(!isset($_GET['order']) || $_GET['order']=='desc'){
-                                $order = 'asc';
+                            $order = 'asc';
                             } else if($_GET['order']=='asc' ||$_GET['order']!=$order){
-                                $order = 'desc';
+                            $order = 'desc';
                             }
+                            $class ='';
+                            if(isset($_GET['sort'])){
+                            if($_GET['order'] == 'desc')
+                            $class = 'sorting_desc';
+                            else
+                            $class = 'sorting_asc';
+                            }
+                            if(isset($_GET['search']))
+                            $href_search="index.php?controller=CategoryController&action=index&search=".$_GET['search'];
+                            $href="index.php?controller=CategoryController&action=index";
                             ?>
                             <tr>
                                 <th><input type="checkbox" id="checkAll"/></th>
-                                <th width="15%" class="<?php if($_GET['action']=='sortId'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                    <a href="index.php?controller=CategoryController&action=sortId&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>" id="sortId">ID</a>
-                                </th>
-                                <th width="35%" class="<?php if($_GET['action']=='sortCategoryname'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                    <a href="index.php?controller=CategoryController&action=sortCategoryname&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Username</a>
-                                </th>
-                                <th width="20%" class="<?php if($_GET['action']=='sortActivate'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                    <a href="index.php?controller=CategoryController&action=sortActivate&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Activate</a>
-                                </th>
-                                <th width="10%" class="<?php if($_GET['action']=='sortTimeCreated'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                    <a href="index.php?controller=CategoryController&action=sortTimeCreated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Created</a>
-                                </th>
-                                <th width="10%" class="<?php if($_GET['action']=='sortTimeUpdated'){if($_GET['order']=='desc') echo "sorting_desc"; else echo 'sorting_asc';}?>">
-                                    <a href="index.php?controller=CategoryController&action=sortTimeUpdated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Updated</a>
-                                </th>
-                                <th width="10%">Action</th>
+                                <?php if(isset($_GET['search'])){ ?>
+                                    <th width="15%" class=<?php echo $class;?>>
+                                        <a href="<?php echo $href_search;?>&sort=id&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>" id="sortId">ID</a>
+                                    </th>
+                                    <th width="35%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href_search;?>&sort=categoryname&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Categoryname</a>
+                                    </th>
+                                    <th width="20%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href_search;?>&sort=activate&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Activate</a>
+                                    </th>
+                                    <th width="10%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href_search;?>&sort=time_created&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Created</a>
+                                    </th>
+                                    <th width="10%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href_search;?>&sort=time_updated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Updated</a>
+                                    </th>
+                                    <th width="10%">Action</th>
+                                <?php }else{ ?>
+                                    <th width="15%" class=<?php echo $class;?>>
+                                        <a href="<?php echo $href;?>&sort=id&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>" id="sortId">ID</a>
+                                    </th>
+                                    <th width="35%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href;?>&sort=categoryname&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Categoryname</a>
+                                    </th>
+                                    <th width="20%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href;?>&sort=activate&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Activate</a>
+                                    </th>
+                                    <th width="10%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href;?>&sort=time_created&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Created</a>
+                                    </th>
+                                    <th width="10%" class="<?php echo $class;?>">
+                                        <a href="<?php echo $href;?>&sort=time_updated&order=<?php echo $order;?>&page=<?php echo $_GET['page'];?>">Time Updated</a>
+                                    </th>
+                                    <th width="10%">Action</th>
+                                <?php } ?>
                             </tr>
                         </thead>
                         <tbody>
@@ -77,10 +106,10 @@ include_once 'menu.php';
                                 <td><input type="checkbox" name="checkbox[]" value="<?php echo $dt['id']; ?>"/></td>
                                 <td><?php echo $dt['id'];?></td>
                                 <td><?php echo $dt['categoryname'];?></td>
-                                <td><span class="text-success"><?php if($dt['activate']) echo "Activate"; else echo "Deactivate";?></span></td>
+                                <td><span class="<?php if($dt['activate']) echo 'text-success'; else echo 'text-error';?>"><?php if($dt['activate']) echo "Activate"; else echo "Deactivate";?></span></td>
                                 <td><?php echo $dt['time_created'];?></td>
                                 <td><?php echo $dt['time_updated'];?></td>
-                                <td><a href="index.php?controller=CategoryController&action=viewEditCategory&id=<?php echo $dt['id']; ?>" class="btn btn-info">Edit</a></td>
+                                <td><a href="index.php?controller=CategoryController&action=editCategory&id=<?php echo $dt['id']; ?>" class="btn btn-info">Edit</a></td>
                             </tr>
                         <?php } ?>
                     </table>
@@ -114,3 +143,5 @@ include_once 'menu.php';
 </script>
 </body>
 </html>
+<?php
+$_SESSION['page'] = $_GET['page'];

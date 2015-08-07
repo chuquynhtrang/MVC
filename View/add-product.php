@@ -57,7 +57,18 @@ include_once 'menu.php';
                                 </select>
                             </div>
                             <div class="clear"></div>
-                        </div>                          
+                        </div>
+                        <div class="row-form">
+                        <div class="span3">Category:</div>
+                            <div class="span9">
+                                <select name="category">
+                                    <?php foreach($list as $key){?>
+                                    <option value="<?php echo $key['id'];?>"><?php echo $key['categoryname'];?></option>
+                                    <?php }?>
+                                </select>
+                            </div>
+                            <div class="clear"></div>
+                        </div>
                         <div class="row-form">
                         	<button class="btn btn-success" type="submit" name="create">Create</button>
 							<div class="clear"></div>
@@ -76,3 +87,5 @@ include_once 'menu.php';
 
 </body>
 </html>
+<?php
+//    var_dump($list);

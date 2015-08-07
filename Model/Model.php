@@ -45,7 +45,6 @@ class Model extends Database
     {
         $column = implode(',',array_keys($dt));
         $value = array_values($dt);
-        var_dump($value);
         $query = "INSERT INTO $this->table($column) VALUES (";
         for($i=0;$i<sizeof($value);$i++) {
             if($i!=0) {
@@ -54,7 +53,6 @@ class Model extends Database
             $query .= "'$value[$i]'";
         }
         $query .= ")";
-        var_dump($query);
         $result = $this->cont->query($query);
         return $result;
     }
@@ -80,7 +78,6 @@ class Model extends Database
     //delete database
     public function delete($id){
         $query = "DELETE FROM $this->table WHERE id = $id";
-        var_dump($query);
         $result = $this->cont->query($query);
         return $result;
     }
@@ -100,6 +97,12 @@ class Model extends Database
         return $result;
     }
 
+    public function sortBySearch($search,$column_search,$column,$order,$offset,$step)
+    {
+        $query = "SELECT * FROM $this->table WHERE $column_search LIKE '%$search%' ORDER BY $column $order LIMIT $offset,$step";
+        $result = $this->cont->query($query);
+        return $result;
+    }
     //search by column
     public function search($column,$search){
         $query = "SELECT * FROM $this->table WHERE $column LIKE '%$search%'";
