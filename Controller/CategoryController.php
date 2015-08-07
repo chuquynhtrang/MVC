@@ -4,12 +4,16 @@ class CategoryController extends BaseController
 {
     public function index()
     {
+<<<<<<< HEAD
         if(isset($_GET['search']))
             $this->indexBase('categories','CategoryModel','categoryname','categories',HREFCATEGORY.'&search='.$_GET['search'].'&page=');
         else if(isset($_GET['sort']))
             $this->indexBase('categories','CategoryModel','categoryname','categories',HREFCATEGORY.'&sort='.$_GET['sort'].'&order='.$_GET['order'].'&page=');
         else
             $this->indexBase('categories','CategoryModel','categoryname','categories',HREFCATEGORY.'&page=');
+=======
+        $this->indexBase('categories', 'CategoryModel', 'categoryname', 'categories', 'index.php?controller=CategoryController&action=index&page=');
+>>>>>>> origin/master
     }
 
     public function viewAddCategory()
@@ -45,6 +49,7 @@ class CategoryController extends BaseController
 
     public function editCategory()
     {
+<<<<<<< HEAD
         $data = $this->getOldEdit('categories','CategoryModel');
         if($_SERVER['REQUEST_METHOD'] == "POST") {
             $dt['categoryname'] = $_POST['categoryname'];
@@ -56,5 +61,14 @@ class CategoryController extends BaseController
             header('Location:' . HREFCATEGORY . '&page='.$_SESSION['page']);
         }
         $this->view('edit-category',$data);
+=======
+        $categoryname = $_POST['categoryname'];
+        $activate = $_POST['activate'];
+        date_default_timezone_set('Asia/BangKok');
+        $time_updated = date('y-m-d H:i:s');
+
+        $this->edit('categories','CategoryModel',['categoryname'=>$categoryname,'activate'=>$activate,'time_updated'=>$time_updated]);
+        header('Location:index.php?controller=CategoryController&action=index&page=1');
+>>>>>>> origin/master
     }
 }

@@ -5,6 +5,7 @@ class ProductController extends BaseController
 {
     public function index()
     {
+<<<<<<< HEAD
         if(isset($_GET['category_id'])){
             $category_id = $_GET['category_id'];
             $model = new ProductModel('products');
@@ -37,6 +38,9 @@ class ProductController extends BaseController
             $this->view('list-products',['list_products' => $dt2,'link'=>$link,'list'=>$list]);
         }
 //        $this->indexBase('products','ProductModel','productname','products',HREFPRODUCT.'&page=');
+=======
+        $this->indexBase('products','ProductModel','productname','products','index.php?controller=ProductController&action=index&page=');
+>>>>>>> origin/master
     }
 
     public function viewAddProduct()
@@ -68,6 +72,7 @@ class ProductController extends BaseController
 
     public function editProduct()
     {
+<<<<<<< HEAD
         $data = $this->getOldEdit('products','ProductModel');
         $md = new CategoryModel('categories');
         $result = $md->getAll('id,categoryname');
@@ -88,5 +93,17 @@ class ProductController extends BaseController
             header('Location:' . HREFPRODUCT . '&page='.$_SESSION['page']);
         }
         $this->view('edit-product',['data'=>$data,'list'=>$list]);
+=======
+        $productname = $_POST['productname'];
+        $price = $_POST['price'];
+        $description = $_POST['description'];
+        $activate = $_POST['activate'];
+        date_default_timezone_set('Asia/BangKok');
+        $time_updated = date('y-m-d H:i:s');
+        $image = $_POST['productname'];
+
+        $this->edit('products','ProductModel',['productname'=>$productname,'price'=>$price,'description'=>$description,'activate'=>$activate,'time_updated'=>$time_updated,'image'=>$image]);
+        header('Location:index.php?controller=ProductController&action=index&page=1');
+>>>>>>> origin/master
     }
 }

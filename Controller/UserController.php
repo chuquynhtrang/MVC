@@ -8,12 +8,16 @@ class UserController extends BaseController
 
     public function index()
     {
+<<<<<<< HEAD
         if(isset($_GET['search']))
             $this->indexBase('users','UserModel','username','users',HREFUSER.'&search='.$_GET['search'].'&page=');
         else if(isset($_GET['sort']))
             $this->indexBase('users','UserModel','username','users',HREFUSER.'&sort='.$_GET['sort'].'&order='.$_GET['order'].'&page=');
         else
             $this->indexBase('users','UserModel','username','users',HREFUSER.'&page=');
+=======
+        $this->indexBase('users','UserModel','username','users','index.php?controller=UserController&action=index&page=');
+>>>>>>> origin/master
     }
 
     public function viewAddUser()
@@ -64,5 +68,8 @@ class UserController extends BaseController
         } else
             $this->view('edit-user', ['data' => $data]);
     }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/master
 }

@@ -26,7 +26,11 @@ class BaseController{
                 $this->view('list-' . $select, ['list_' . $select => $dt2,'link' => $link]);
             }
             $this->view('list-' . $select, ['list_' . $select => $dt1,'link' => $link]);
+<<<<<<< HEAD
         } else if(isset($_GET['sort'])&& empty($_GET['search'])){
+=======
+        } else if(isset($_GET['sort'])){
+>>>>>>> origin/master
             $sort = $_GET['sort'];
             $order = $_GET['order'];
             $md = new $model($table);
@@ -40,9 +44,12 @@ class BaseController{
             $this->view('list-'.$select, ['list_'.$select => $dt1,'link' => $link]);
         }
         else {
+<<<<<<< HEAD
             if(isset($_POST['activate']) || isset($_POST['delete'])){
                 $this->handleBase($table,$model);
             }
+=======
+>>>>>>> origin/master
             $md = new $model($table);
             $dt = $md->getAll('*');
             $page = $_GET['page'];
@@ -135,4 +142,8 @@ class BaseController{
             }
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/master
